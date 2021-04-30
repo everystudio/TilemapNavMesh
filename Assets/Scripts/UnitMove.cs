@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class UnitMove : MonoBehaviour
 {
     public GameObject m_goTarget;
+    public Text m_txtShowCommand;
 
     [SerializeField]
     private int m_iCurrentIndex;
@@ -35,10 +37,40 @@ public class UnitMove : MonoBehaviour
                 return true;
             }
         }
-
         transform.position = Vector3.MoveTowards(transform.position, tragetPosition, m_fSpeed * Time.deltaTime);
-
         return false;
+    }
+
+    private void SearchTask()
+    {
+        m_txtShowCommand.text = "Not Found Command";
+
+        RaycastHit2D hit2D = Physics2D.CircleCast(
+            transform.position,
+            1.0f, 
+            Vector2.zero,0.0f,
+            LayerMask.GetMask("Task"));
+        //Debug.Log(hit2D);
+        //Debug.Log(hit2D.collider);
+        if (hit2D.collider != null)
+        {
+            UnitTask unitTask = hit2D.collider.GetComponent<UnitTask>();
+            //Debug.Log(unitTask);
+            if (unitTask != null)
+            {
+                m_txtShowCommand.text = unitTask.m_strTaskCommand;
+                Invoke(unitTask.m_strTaskCommand, 0.0f);
+                //Debug.Log("find");
+            }
+        }
+    }
+    private void Red()
+    {
+        GetComponent<SpriteRenderer>().color = Color.red;
+    }
+    private void Green()
+    {
+        GetComponent<SpriteRenderer>().color = Color.green;
     }
 
 
@@ -49,6 +81,7 @@ public class UnitMove : MonoBehaviour
         {
             if (Move())
             {
+                SearchTask();
                 m_moveRoutePath = null;
             }
         }
