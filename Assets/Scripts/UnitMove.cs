@@ -43,7 +43,10 @@ public class UnitMove : MonoBehaviour
 
     private void SearchTask()
     {
-        m_txtShowCommand.text = "Not Found Command";
+        if (m_txtShowCommand != null)
+        {
+            m_txtShowCommand.text = "Not Found Command";
+        }
 
         RaycastHit2D hit2D = Physics2D.CircleCast(
             transform.position,
@@ -58,7 +61,10 @@ public class UnitMove : MonoBehaviour
             //Debug.Log(unitTask);
             if (unitTask != null)
             {
-                m_txtShowCommand.text = unitTask.m_strTaskCommand;
+                if (m_txtShowCommand != null)
+                {
+                    m_txtShowCommand.text = unitTask.m_strTaskCommand;
+                }
                 Invoke(unitTask.m_strTaskCommand, 0.0f);
                 //Debug.Log("find");
             }
